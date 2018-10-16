@@ -20,8 +20,9 @@ abstract class Utils
 
         do {
             $directory = dirname($directory);
-            $composer = $directory . '/composer.json';
-            if(file_exists($composer)) {
+            $composer = $directory.'/composer.json';
+            $vendor = $directory.'/vendor/';
+            if(file_exists($composer) && file_exists($vendor)) {
                 $root = $directory;
             }
         } while(is_null($root) && $directory != '/');
