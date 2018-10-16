@@ -1,6 +1,6 @@
 <?php
 
-namespace LangleyFoxall\XeroLaravel\Wrappers;
+namespace LangleyFoxall\XeroLaravel;
 
 use LangleyFoxall\XeroLaravel\Apps\PrivateXeroApp;
 use LangleyFoxall\XeroLaravel\Apps\XeroApp;
