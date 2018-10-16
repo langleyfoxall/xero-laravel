@@ -22,12 +22,12 @@ class XeroPrivateApp extends PrivateApplication
     ];
 
     /**
-     * Call a relationship method.
+     * Call a relationship method, and return a QueryWrapper.
      * Syntax: $xero->contacts()
      *
      * @param $name
      * @param $arguments
-     * @return \XeroPHP\Remote\Query
+     * @return QueryWrapper
      * @throws \XeroPHP\Remote\Exception
      */
     public function __call($name, $arguments)
@@ -40,7 +40,7 @@ class XeroPrivateApp extends PrivateApplication
 
         $model = $this->relationshipToModelMap[$name];
 
-        return $this->load($model);
+        return new QueryWrapper($this->load($model));
     }
 
     /**
@@ -58,7 +58,7 @@ class XeroPrivateApp extends PrivateApplication
             return null;
         }
 
-        return $this->$name()->execute();
+        return $this->$name()->get();
     }
 }
 
