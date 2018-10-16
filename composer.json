@@ -1,0 +1,36 @@
+{
+    "name": "langleyfoxall/xero-laravel",
+    "description": "Access the Xero online accounting system using an Eloquent-like syntax",
+    "type": "library",
+    "license": "LGPL-3.0-only",
+    "keywords": [
+        "xero",
+        "php",
+        "laravel",
+        "eloquent",
+        "accounting"
+    ],
+    "require": {
+        "illuminate/support": "^5.1",
+        "calcinai/xero-php": "^1.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "LangleyFoxall\\XeroLaravel\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Jordan Hall",
+            "email": "jordan@langleyfoxall.co.uk",
+            "role": "Maintainer"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "LangleyFoxall\\XeroLaravel\\Providers\\XeroLaravelServiceProvider"
+            ]
+        }
+    }
+}
