@@ -3,9 +3,13 @@
 namespace LangleyFoxall\XeroLaravel\Apps;
 
 use BadMethodCallException;
+use Exception;
+use Illuminate\Support\Str;
+use LangleyFoxall\XeroLaravel\Utils;
 use LangleyFoxall\XeroLaravel\Wrappers\QueryWrapper;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use XeroPHP\Application\PrivateApplication;
-use XeroPHP\Models\Accounting\Contact;
 
 /**
  * Class PrivateXeroApp
@@ -18,20 +22,48 @@ class PrivateXeroApp extends PrivateApplication
      *
      * @var array
      */
-    private $relationshipToModelMap = [
-        'contacts' => Contact::class
-    ];
+    private $relationshipToModelMap = [];
 
     /**
      * PrivateXeroApp constructor.
      *
      * @param $config
+     * @throws Exception
      */
     public function __construct($config)
     {
         parent::__construct($config);
 
+        $this->populateRelationshipToModelMap('Accounting', '');
+        $this->populateRelationshipToModelMap('Assets', 'assets');
+        $this->populateRelationshipToModelMap('Files', 'files');
+        $this->populateRelationshipToModelMap('PayrollAU', 'payrollAU');
+        $this->populateRelationshipToModelMap('PayrollUS', 'payrollUS');
+    }
 
+    /**
+     * Populate the relationship to model map.
+     *
+     * @throws Exception
+     */
+    public function populateRelationshipToModelMap($modelSubdirectory, $prefix)
+    {
+        $directory = Utils::getProjectRootDirectory();
+
+        $modelsDirectory = $directory.'/vendor/calcinai/xero-php/src/XeroPHP/Models/'.$modelSubdirectory;
+
+        $di = new RecursiveDirectoryIterator($modelsDirectory);
+        foreach (new RecursiveIteratorIterator($di) as $filename => $file) {
+
+            if ($file->isDir() || !Str::endsWith($filename, '.php')) {
+                continue;
+            }
+
+            $relationship = Str::camel($prefix.Str::plural(str_replace([$modelsDirectory, '.php', '/'], ['', '', ''], $filename)));
+            $model = str_replace([$directory.'/vendor/calcinai/xero-php/src/', '/', '.php'], ['', '\\', ''], $filename);
+
+            $this->relationshipToModelMap[$relationship] = $model;
+        }
     }
 
     /**
