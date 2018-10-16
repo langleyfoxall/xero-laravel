@@ -3,7 +3,6 @@
 namespace LangleyFoxall\XeroLaravel;
 
 use LangleyFoxall\XeroLaravel\Apps\PrivateXeroApp;
-use LangleyFoxall\XeroLaravel\Apps\XeroApp;
 
 class Xero
 {
@@ -29,7 +28,7 @@ class Xero
      * Creates the XeroApp object
      *
      * @param string $key
-     * @return XeroApp
+     * @return PrivateXeroApp
      * @throws \Exception
      */
     private function createApp($key)
