@@ -1,6 +1,6 @@
 {
     "name": "langleyfoxall/xero-laravel",
-    "description": "Access the Xero online accounting system using an Eloquent-like syntax",
+    "description": "💸 Access the Xero online accounting system using an Eloquent-like syntax",
     "type": "library",
     "license": "LGPL-3.0-only",
     "keywords": [
