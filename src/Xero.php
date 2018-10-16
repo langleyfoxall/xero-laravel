@@ -14,7 +14,7 @@ class Xero
      */
     public function app($key = 'default')
     {
-        if (!isset($this->$apps[$key])) {
+        if (!isset($this->apps[$key])) {
             $this->apps[$key] = $this->createApp($key);
         }
 
