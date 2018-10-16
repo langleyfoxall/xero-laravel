@@ -1,5 +1,5 @@
 <?php
-namespace LangleyFoxall\XeroLaravel;
+namespace LangleyFoxall\XeroLaravel\Wrappers;
 
 use XeroPHP\Remote\Query;
 
