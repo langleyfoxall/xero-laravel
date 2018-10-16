@@ -22,7 +22,7 @@ Run the following `artisan` command from the root of your project. This
 will publish the package configuration file.
 
 ```bash
-php artisan vendor:publish --provider="LangleyFoxall\LaravelXero\Providers\XeroLaravelServiceProvider"
+php artisan vendor:publish --provider="LangleyFoxall\XeroLaravel\Providers\XeroLaravelServiceProvider"
 ```
 
 ## Quick Start
