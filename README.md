@@ -28,3 +28,14 @@ php artisan vendor:publish --provider="LangleyFoxall\XeroLaravel\Providers\XeroL
 ## Quick Start
 
 TO DO
+
+```
+# Supported Syntax:
+$xero = (new Xero())->app();
+
+$contacts = $xero->contacts()->get();                               # Not ready
+$contacts = $xero->contacts;
+$contacts = $xero->contacts()->where('Name', 'John Smith')->get();  # Not ready
+$contact = $xero->contacts()->where('Name', 'John Smith')->first(); # Not ready
+
+```
