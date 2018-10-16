@@ -31,11 +31,12 @@ class Xero
     {
         $config = config(Constants::CONFIG_KEY);
 
-        if (!isset($config[$key])) {
-            throw new \Exception('The specified key could not be found in the Xero \'apps\' array.');
+        if (!isset($config['apps']) || !isset($config['apps'][$key])) {
+            throw new \Exception('The specified key could not be found in the Xero \'apps\' array, ' .
+                'or the \'apps\' array does not exist.');
         }
 
-        $appConfig = $config[$key];
+        $appConfig = $config['apps'][$key];
 
         switch ($appConfig['app_type']) {
             case 'private':
