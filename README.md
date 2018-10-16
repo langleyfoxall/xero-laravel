@@ -25,6 +25,8 @@ will publish the package configuration file.
 php artisan vendor:publish --provider="LangleyFoxall\XeroLaravel\Providers\XeroLaravelServiceProvider"
 ```
 
+TO DO: Populate `xero-laravel-lf.php` config file.
+
 ## Quick Start
 
 TO DO
