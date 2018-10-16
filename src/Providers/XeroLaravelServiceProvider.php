@@ -1,6 +1,6 @@
 <?php
 
-namespace LangleyFoxall\XeroLaravel\Providers;
+namespace LangleyFoxall\XeroLaravel\Providers
 
 use Illuminate\Support\ServiceProvider;
 use LangleyFoxall\XeroLaravel\Constants;
@@ -27,7 +27,7 @@ class XeroLaravelServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            Constants::CONFIG_PATH => config_path(Constants::CONFIG_KEY),
+            Constants::CONFIG_PATH => config_path(Constants::CONFIG_KEY.'.php'),
         ]);
     }
 }
