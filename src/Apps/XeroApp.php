@@ -4,6 +4,7 @@ namespace LangleyFoxall\XeroLaravel\Apps;
 
 use BadMethodCallException;
 use LangleyFoxall\XeroLaravel\QueryWrapper;
+use LangleyFoxall\XeroLaravel\Wrappers\QueryWrapper;
 use XeroPHP\Application\PrivateApplication;
 use XeroPHP\Models\Accounting\Contact;
 
