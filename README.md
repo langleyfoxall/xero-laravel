@@ -27,7 +27,7 @@ php artisan vendor:publish --provider="LangleyFoxall\XeroLaravel\Providers\XeroL
 
 TO DO: Populate `xero-laravel-lf.php` config file.
 
-## Quick Start
+## Usage
 
 TO DO
 
