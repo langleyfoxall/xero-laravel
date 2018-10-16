@@ -1,7 +1,7 @@
 # 💸 Xero Laravel
 
-Xero Laravel allows developers to access the Xero online 
-accounting system using an Eloquent-like syntax.
+Xero Laravel allows developers to access the Xero accounting system using 
+an Eloquent-like syntax.
 
 ## Installation
 
