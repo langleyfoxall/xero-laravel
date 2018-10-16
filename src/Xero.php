@@ -3,13 +3,14 @@
 namespace LangleyFoxall\XeroLaravel\Wrappers;
 
 use LangleyFoxall\XeroLaravel\Apps\PrivateXeroApp;
+use LangleyFoxall\XeroLaravel\Apps\XeroApp;
 
 class Xero
 {
     private $apps = [];
 
     /**
-     * Get Xero application object
+     * Get XeroApp object
      *
      * @param string $key
      * @return mixed
@@ -25,9 +26,10 @@ class Xero
     }
 
     /**
-     * Creates the app from configuration
+     * Creates the XeroApp object
      *
-     * @return PrivateXeroApp
+     * @param string $key
+     * @return XeroApp
      * @throws \Exception
      */
     private function createApp($key)
