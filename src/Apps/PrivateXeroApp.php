@@ -1,16 +1,16 @@
 <?php
 
-namespace LangleyFoxall\XeroLaravel;
+namespace LangleyFoxall\XeroLaravel\Apps;
 
 use BadMethodCallException;
-use XeroPHP\Application\PrivateApplication;
+use LangleyFoxall\XeroLaravel\QueryWrapper;
 use XeroPHP\Models\Accounting\Contact;
 
 /**
  * Class XeroPrivateApp
  * @package LangleyFoxall\XeroLaravel
  */
-class XeroPrivateApp extends PrivateApplication
+class PrivateXeroApp extends XeroApp
 {
     /**
      * Map between relationship names and Xero PHP library models

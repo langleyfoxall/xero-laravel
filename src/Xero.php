@@ -1,6 +1,8 @@
 <?php
 
-namespace LangleyFoxall\XeroLaravel;
+namespace LangleyFoxall\XeroLaravel\Wrappers;
+
+use LangleyFoxall\XeroLaravel\Apps\PrivateXeroApp;
 
 class Xero
 {
@@ -9,6 +11,7 @@ class Xero
     /**
      * Get Xero application object
      *
+     * @param string $key
      * @return mixed
      * @throws \Exception
      */
@@ -24,7 +27,7 @@ class Xero
     /**
      * Creates the app from configuration
      *
-     * @return XeroPrivateApp
+     * @return PrivateXeroApp
      * @throws \Exception
      */
     private function createApp($key)
@@ -40,7 +43,7 @@ class Xero
 
         switch ($appConfig['app_type']) {
             case 'private':
-                return new XeroPrivateApp($appConfig);
+                return new PrivateXeroApp($appConfig);
                 break;
 
             case 'public':
