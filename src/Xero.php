@@ -27,13 +27,19 @@ class Xero
      * @return XeroPrivateApp
      * @throws \Exception
      */
-    private function createApp()
+    private function createApp($key)
     {
         $config = config(Constants::CONFIG_KEY);
 
-        switch ($config['app_type']) {
+        if (!isset($config[$key])) {
+            throw new \Exception('The specified key could not be found in the Xero \'apps\' array.');
+        }
+
+        $appConfig = $config[$key];
+
+        switch ($appConfig['app_type']) {
             case 'private':
-                return new XeroPrivateApp($config);
+                return new XeroPrivateApp($appConfig);
                 break;
 
             case 'public':
