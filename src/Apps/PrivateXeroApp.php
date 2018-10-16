@@ -42,8 +42,11 @@ class PrivateXeroApp extends PrivateApplication
     }
 
     /**
-     * Populate the relationship to model map.
+     * Populate the relationship to model map, for all models within
+     * a specified model subdirectory.
      *
+     * @param $modelSubdirectory
+     * @param $prefix
      * @throws Exception
      */
     public function populateRelationshipToModelMap($modelSubdirectory, $prefix)
