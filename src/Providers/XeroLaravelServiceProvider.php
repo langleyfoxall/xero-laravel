@@ -1,5 +1,7 @@
 <?php
 
+namespace LangleyFoxall\XeroLaravel\Providers;
+
 use Illuminate\Support\ServiceProvider;
 use LangleyFoxall\XeroLaravel\Constants;
 
