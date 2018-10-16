@@ -31,6 +31,6 @@ abstract class Utils
             return $root;
         }
 
-        throw new Exception('Unable to locate `composer.json`.');
+        throw new Exception('Unable to determine project root directory.');
     }
 }
