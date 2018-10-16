@@ -5,8 +5,7 @@ accounting system using an Eloquent-like syntax.
 
 ## Installation
 
-
-UXDM can be easily installed using Composer. Just run the following 
+Xero Laravel can be easily installed using Composer. Just run the following 
 command from the root of your project.
 
 ```bash
