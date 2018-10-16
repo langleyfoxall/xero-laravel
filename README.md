@@ -33,9 +33,9 @@ TO DO
 # Supported Syntax:
 $xero = (new Xero())->app();
 
-$contacts = $xero->contacts()->get();                               # Not ready
+$contacts = $xero->contacts()->get();                               
 $contacts = $xero->contacts;
-$contacts = $xero->contacts()->where('Name', 'John Smith')->get();  # Not ready
-$contact = $xero->contacts()->where('Name', 'John Smith')->first(); # Not ready
+$contacts = $xero->contacts()->where('Name', 'John Smith')->get();
+$contact = $xero->contacts()->where('Name', 'John Smith')->first();
 
 ```
