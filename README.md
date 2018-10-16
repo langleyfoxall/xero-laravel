@@ -35,7 +35,7 @@ $xero = (new Xero())->app();
 
 $contacts = $xero->contacts()->get();                               
 $contacts = $xero->contacts;
-$contacts = $xero->contacts()->where('Name', 'John Smith')->get();
-$contact = $xero->contacts()->where('Name', 'John Smith')->first();
+$contacts = $xero->contacts()->where('Name', 'Bank West')->get();
+$contact = $xero->contacts()->where('Name', 'Bank West')->first();
 
 ```
