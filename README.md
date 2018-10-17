@@ -75,7 +75,7 @@ $contacts = $xero->contacts;
 # Retrieve contacts filtered by name
 $contacts = $xero->contacts()->where('Name', 'Bank West')->get();
 
-# Retrieve an individual contact fitered by name
+# Retrieve an individual contact filtered by name
 $contact = $xero->contacts()->where('Name', 'Bank West')->first();
 ```
 
