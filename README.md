@@ -67,7 +67,7 @@ You can then immediately access Xero data using Eloquent-like syntax. The
 following code snippet shows the available syntax. When multiple results 
 are returned from the API they will be returned as Laravel Collection.
 
-```
+```php
 # Retrieve all contacts
 $contacts = $xero->contacts()->get();                               
 $contacts = $xero->contacts;
@@ -87,7 +87,7 @@ data related to your Xero application (e.g. `$xero->relationshipName`).
 *Note: Some of these relationships may not be available if the related 
 service(s) are not enabled for your Xero account.*
 
-```php
+```
 accounts
 addresses
 assetsAssetTypeBookDepreciationSettings
