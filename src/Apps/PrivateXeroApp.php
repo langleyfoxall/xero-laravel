@@ -42,6 +42,18 @@ class PrivateXeroApp extends PrivateApplication
     }
 
     /**
+     * Retrieve a collection of the available relationships.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getAvailableRelationships()
+    {
+        $relationships = array_keys($this->relationshipToModelMap);
+        sort($relationships);
+        return collect($relationships);
+    }
+
+    /**
      * Populate the relationship to model map, for all models within
      * a specified model subdirectory.
      *
