@@ -3,6 +3,16 @@
 Xero Laravel allows developers to access the Xero accounting system using 
 an Eloquent-like syntax.
 
+<p align="center">
+    <img src="assets/images/xero-laravel-usage.png" />
+</p>
+
+<p align="center">
+    <a href="https://packagist.org/packages/langleyfoxall/xero-laravel/stats">
+        <img src="https://img.shields.io/packagist/dt/langleyfoxall/xero-laravel.svg" />
+    </a>
+</p>
+
 ## Installation
 
 Xero Laravel can be easily installed using Composer. Just run the following 
