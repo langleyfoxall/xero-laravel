@@ -69,9 +69,9 @@ $contacts = $xero->contacts()->where('Name', 'Bank West')->get();
 $contact = $xero->contacts()->where('Name', 'Bank West')->first();
 ```
 
-### Available relationship
+### Available relationships
 
-The list below shows all available relatioships that can be used to access 
+The list below shows all available relationships that can be used to access 
 data related to your Xero application (e.g. `$xero->relationshipName`). 
 
 *Note: Some of these relationships may not be available if the related 
