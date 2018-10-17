@@ -3,6 +3,16 @@
 Xero Laravel allows developers to access the Xero accounting system using 
 an Eloquent-like syntax.
 
+<p align="center">
+    <img src="assets/images/xero-laravel-usage.png" />
+</p>
+
+<p align="center">
+    <a href="https://packagist.org/packages/langleyfoxall/xero-laravel/stats">
+        <img src="https://img.shields.io/packagist/dt/langleyfoxall/xero-laravel.svg" />
+    </a>
+</p>
+
 ## Installation
 
 Xero Laravel can be easily installed using Composer. Just run the following 
@@ -57,7 +67,7 @@ You can then immediately access Xero data using Eloquent-like syntax. The
 following code snippet shows the available syntax. When multiple results 
 are returned from the API they will be returned as Laravel Collection.
 
-```
+```php
 # Retrieve all contacts
 $contacts = $xero->contacts()->get();                               
 $contacts = $xero->contacts;
@@ -77,7 +87,7 @@ data related to your Xero application (e.g. `$xero->relationshipName`).
 *Note: Some of these relationships may not be available if the related 
 service(s) are not enabled for your Xero account.*
 
-```php
+```
 accounts
 addresses
 assetsAssetTypeBookDepreciationSettings
