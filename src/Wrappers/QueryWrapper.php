@@ -96,6 +96,12 @@ class QueryWrapper
         return $this->app->loadByGUID($this->getClass(), $guid);
     }
 
+    /**
+     * Get the Xero class (Contact, Invoice, etc.) that the
+     * wrapped query object is using.
+     *
+     * @return string
+     */
     private function getClass()
     {
         return $this->query->getFrom();
