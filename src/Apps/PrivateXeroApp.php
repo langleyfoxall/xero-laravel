@@ -100,7 +100,7 @@ class PrivateXeroApp extends PrivateApplication
 
         $model = $this->relationshipToModelMap[$name];
 
-        return new QueryWrapper($this->load($model));
+        return new QueryWrapper($this->load($model), $this);
     }
 
     /**
