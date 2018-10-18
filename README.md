@@ -77,6 +77,15 @@ $contacts = $xero->contacts()->where('Name', 'Bank West')->get();
 
 # Retrieve an individual contact filtered by name
 $contact = $xero->contacts()->where('Name', 'Bank West')->first();
+
+# Retrieve an individual contact by its GUID
+$contact = $xero->contacts()->find('34xxxx6e-7xx5-2xx4-bxx5-6123xxxxea49');
+
+# Retrieve multiple contact by their GUIDS
+$contacts = $xero->contacts()->find([
+    '34xxxx6e-7xx5-2xx4-bxx5-6123xxxxea49',
+    '364xxxx7f-2xx3-7xx3-gxx7-6726xxxxhe76',
+    ]);
 ```
 
 ### Available relationships

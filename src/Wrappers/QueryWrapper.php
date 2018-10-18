@@ -1,6 +1,7 @@
 <?php
 namespace LangleyFoxall\XeroLaravel\Wrappers;
 
+use LangleyFoxall\XeroLaravel\Apps\PrivateXeroApp;
 use XeroPHP\Remote\Query;
 
 /**
@@ -17,14 +18,22 @@ class QueryWrapper
     private $query;
 
     /**
+     * The Xero app object
+     *
+     * @var Query
+     */
+    private $app;
+
+    /**
      * Builds a QueryWrapper around a Query object
      *
-     * QueryWrapper constructor.
      * @param Query $query
+     * @param PrivateXeroApp $app
      */
-    public function __construct(Query $query)
+    public function __construct(Query $query, PrivateXeroApp $app)
     {
         $this->query = $query;
+        $this->app = $app;
     }
 
     /**
@@ -67,6 +76,35 @@ class QueryWrapper
     public function first()
     {
         return $this->get()->first();
+    }
+
+    /**
+     * Retrieves a model if passed a single GUID.
+     * Retrieves a collection of models if passed an array of GUIDs.
+     *
+     * @param string|array $guid
+     * @return null|\XeroPHP\Remote\Collection|\XeroPHP\Remote\Model
+     * @throws \XeroPHP\Exception
+     * @throws \XeroPHP\Remote\Exception\NotFoundException
+     */
+    public function find($guid)
+    {
+        if (is_array($guid)) {
+            return collect($this->app->loadByGUIDs($this->getClass(), $guid));
+        }
+
+        return $this->app->loadByGUID($this->getClass(), $guid);
+    }
+
+    /**
+     * Get the Xero class (Contact, Invoice, etc.) that the
+     * wrapped query object is using.
+     *
+     * @return string
+     */
+    private function getClass()
+    {
+        return $this->query->getFrom();
     }
 
 }
