@@ -1,6 +1,7 @@
 <?php
 namespace LangleyFoxall\XeroLaravel\Wrappers;
 
+use Illuminate\Support\Collection;
 use LangleyFoxall\XeroLaravel\Apps\PrivateXeroApp;
 use XeroPHP\Remote\Query;
 
@@ -79,18 +80,22 @@ class QueryWrapper
     }
 
     /**
-     * Retrieves a model if passed a single GUID.
-     * Retrieves a collection of models if passed an array of GUIDs.
+     * Retrieves a Xero model if passed a single GUID.
+     * Retrieves a collection of Xero models if passed an array or collection of GUIDs.
      *
-     * @param string|array $guid
+     * @param string|array|Collection $guid
      * @return null|\XeroPHP\Remote\Collection|\XeroPHP\Remote\Model
      * @throws \XeroPHP\Exception
      * @throws \XeroPHP\Remote\Exception\NotFoundException
      */
     public function find($guid)
     {
+        if (is_object($guid) && get_class($guid)===Collection::class) {
+            $guid = $guid->toArray();
+        }
+
         if (is_array($guid)) {
-            return collect($this->app->loadByGUIDs($this->getClass(), $guid));
+            return collect($this->app->loadByGUIDs($this->getClass(), implode(',', $guid)));
         }
 
         return $this->app->loadByGUID($this->getClass(), $guid);
