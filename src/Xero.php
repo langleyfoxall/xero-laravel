@@ -1,5 +1,4 @@
 <?php
-
 namespace LangleyFoxall\XeroLaravel;
 
 use LangleyFoxall\XeroLaravel\Apps\PrivateXeroApp;
