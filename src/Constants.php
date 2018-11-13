@@ -1,7 +1,6 @@
 <?php
 namespace LangleyFoxall\XeroLaravel;
 
-
 class Constants
 {
     const CONFIG_KEY = 'xero-laravel-lf';

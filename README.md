@@ -8,6 +8,9 @@ an Eloquent-like syntax.
 </p>
 
 <p align="center">
+    <a href="https://github.styleci.io/repos/153256469">
+        <img src="https://github.styleci.io/repos/153256469/shield?branch=master" alt="StyleCI">
+    </a>
     <a href="https://packagist.org/packages/langleyfoxall/xero-laravel/stats">
         <img src="https://img.shields.io/packagist/dt/langleyfoxall/xero-laravel.svg" />
     </a>

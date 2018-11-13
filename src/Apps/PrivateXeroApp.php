@@ -69,7 +69,6 @@ class PrivateXeroApp extends PrivateApplication
 
         $di = new RecursiveDirectoryIterator($modelsDirectory);
         foreach (new RecursiveIteratorIterator($di) as $filename => $file) {
-
             if ($file->isDir() || !Str::endsWith($filename, '.php')) {
                 continue;
             }
@@ -121,4 +120,3 @@ class PrivateXeroApp extends PrivateApplication
         return $this->$name()->get();
     }
 }
-
