@@ -50,8 +50,9 @@ class QueryWrapper
     {
         $returnValue = call_user_func_array([$this->query, $name], $arguments);
 
-        if (is_object($returnValue) && get_class($returnValue)==Query::class) {
+        if (is_object($returnValue) && get_class($returnValue) === Query::class) {
             $this->query = $returnValue;
+
             return $this;
         }
 
@@ -90,7 +91,7 @@ class QueryWrapper
      */
     public function find($guid)
     {
-        if (is_object($guid) && get_class($guid)===Collection::class) {
+        if (is_object($guid) && get_class($guid) === Collection::class) {
             $guid = $guid->toArray();
         }
 
@@ -111,5 +112,4 @@ class QueryWrapper
     {
         return $this->query->getFrom();
     }
-
 }

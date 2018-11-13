@@ -1,5 +1,4 @@
 <?php
-
 namespace LangleyFoxall\XeroLaravel\Apps;
 
 use BadMethodCallException;
@@ -50,6 +49,7 @@ class PrivateXeroApp extends PrivateApplication
     {
         $relationships = array_keys($this->relationshipToModelMap);
         sort($relationships);
+
         return collect($relationships);
     }
 

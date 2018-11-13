@@ -1,5 +1,4 @@
 <?php
-
 namespace LangleyFoxall\XeroLaravel;
 
 use Exception;
@@ -22,12 +21,13 @@ abstract class Utils
             $directory = dirname($directory);
             $composer = $directory.'/composer.json';
             $vendor = $directory.'/vendor/';
-            if(file_exists($composer) && file_exists($vendor)) {
+
+            if (file_exists($composer) && file_exists($vendor)) {
                 $root = $directory;
             }
-        } while(is_null($root) && $directory != '/');
+        } while (is_null($root) && $directory != '/');
 
-        if(!is_null($root)) {
+        if (!is_null($root)) {
             return $root;
         }
 

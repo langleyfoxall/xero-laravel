@@ -1,5 +1,4 @@
 <?php
-
 namespace LangleyFoxall\XeroLaravel\Providers;
 
 use Illuminate\Support\ServiceProvider;
