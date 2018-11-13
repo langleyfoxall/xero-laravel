@@ -17,14 +17,14 @@ return [
         'default' => [
 
             'app_type' => 'private',
-            'oauth' => [
+            'oauth'    => [
                 'callback'         => 'http://localhost/',
                 'consumer_key'     => env('XERO_CONSUMER_KEY'),
                 'consumer_secret'  => env('XERO_CONSUMER_SECRET'),
                 'rsa_private_key'  => 'file://'.storage_path('app/xero-key-pair/privatekey.pem'),
             ],
 
-        ]
-    ]
+        ],
+    ],
 
 ];

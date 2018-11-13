@@ -1,4 +1,5 @@
 <?php
+
 namespace LangleyFoxall\XeroLaravel\Apps;
 
 use BadMethodCallException;
@@ -11,13 +12,12 @@ use RecursiveIteratorIterator;
 use XeroPHP\Application\PrivateApplication;
 
 /**
- * Class PrivateXeroApp
- * @package LangleyFoxall\XeroLaravel
+ * Class PrivateXeroApp.
  */
 class PrivateXeroApp extends PrivateApplication
 {
     /**
-     * Map between relationship names and Xero PHP library models
+     * Map between relationship names and Xero PHP library models.
      *
      * @var array
      */
@@ -27,6 +27,7 @@ class PrivateXeroApp extends PrivateApplication
      * PrivateXeroApp constructor.
      *
      * @param $config
+     *
      * @throws Exception
      */
     public function __construct($config)
@@ -59,6 +60,7 @@ class PrivateXeroApp extends PrivateApplication
      *
      * @param $modelSubdirectory
      * @param $prefix
+     *
      * @throws Exception
      */
     public function populateRelationshipToModelMap($modelSubdirectory, $prefix)
@@ -69,7 +71,6 @@ class PrivateXeroApp extends PrivateApplication
 
         $di = new RecursiveDirectoryIterator($modelsDirectory);
         foreach (new RecursiveIteratorIterator($di) as $filename => $file) {
-
             if ($file->isDir() || !Str::endsWith($filename, '.php')) {
                 continue;
             }
@@ -83,12 +84,14 @@ class PrivateXeroApp extends PrivateApplication
 
     /**
      * Call a relationship method, and return a QueryWrapper.
-     * Syntax: $xero->contacts()
+     * Syntax: $xero->contacts().
      *
      * @param $name
      * @param $arguments
-     * @return QueryWrapper
+     *
      * @throws \XeroPHP\Remote\Exception
+     *
+     * @return QueryWrapper
      */
     public function __call($name, $arguments)
     {
@@ -105,9 +108,10 @@ class PrivateXeroApp extends PrivateApplication
 
     /**
      * Call a relationship method and get results.
-     * Syntax: $xero->contacts
+     * Syntax: $xero->contacts.
      *
      * @param $name
+     *
      * @return null
      */
     public function __get($name)
@@ -115,10 +119,9 @@ class PrivateXeroApp extends PrivateApplication
         $relationships = array_keys($this->relationshipToModelMap);
 
         if (!in_array($name, $relationships)) {
-            return null;
+            return;
         }
 
         return $this->$name()->get();
     }
 }
-

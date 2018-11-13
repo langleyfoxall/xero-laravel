@@ -1,6 +1,6 @@
 <?php
-namespace LangleyFoxall\XeroLaravel;
 
+namespace LangleyFoxall\XeroLaravel;
 
 class Constants
 {

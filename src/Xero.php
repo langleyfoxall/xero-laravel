@@ -1,4 +1,5 @@
 <?php
+
 namespace LangleyFoxall\XeroLaravel;
 
 use LangleyFoxall\XeroLaravel\Apps\PrivateXeroApp;
@@ -8,11 +9,13 @@ class Xero
     private $apps = [];
 
     /**
-     * Get XeroApp object
+     * Get XeroApp object.
      *
      * @param string $key
-     * @return mixed
+     *
      * @throws \Exception
+     *
+     * @return mixed
      */
     public function app($key = 'default')
     {
@@ -24,18 +27,20 @@ class Xero
     }
 
     /**
-     * Creates the XeroApp object
+     * Creates the XeroApp object.
      *
      * @param string $key
-     * @return PrivateXeroApp
+     *
      * @throws \Exception
+     *
+     * @return PrivateXeroApp
      */
     private function createApp($key)
     {
         $config = config(Constants::CONFIG_KEY);
 
         if (!isset($config['apps']) || !isset($config['apps'][$key])) {
-            throw new \Exception('The specified key could not be found in the Xero \'apps\' array, ' .
+            throw new \Exception('The specified key could not be found in the Xero \'apps\' array, '.
                 'or the \'apps\' array does not exist.');
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace LangleyFoxall\XeroLaravel;
 
 use Exception;
@@ -9,8 +10,9 @@ abstract class Utils
      * Finds and returns the project's root directory
      * (containing the composer.json file).
      *
-     * @return null|string
      * @throws Exception
+     *
+     * @return null|string
      */
     public static function getProjectRootDirectory()
     {

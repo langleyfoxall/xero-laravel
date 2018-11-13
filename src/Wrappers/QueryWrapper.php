@@ -1,4 +1,5 @@
 <?php
+
 namespace LangleyFoxall\XeroLaravel\Wrappers;
 
 use Illuminate\Support\Collection;
@@ -6,29 +7,28 @@ use LangleyFoxall\XeroLaravel\Apps\PrivateXeroApp;
 use XeroPHP\Remote\Query;
 
 /**
- * Class QueryWrapper
- * @package LangleyFoxall\XeroLaravel
+ * Class QueryWrapper.
  */
 class QueryWrapper
 {
     /**
-     * The original Xero PHP Query object
+     * The original Xero PHP Query object.
      *
      * @var Query
      */
     private $query;
 
     /**
-     * The Xero app object
+     * The Xero app object.
      *
      * @var Query
      */
     private $app;
 
     /**
-     * Builds a QueryWrapper around a Query object
+     * Builds a QueryWrapper around a Query object.
      *
-     * @param Query $query
+     * @param Query          $query
      * @param PrivateXeroApp $app
      */
     public function __construct(Query $query, PrivateXeroApp $app)
@@ -44,6 +44,7 @@ class QueryWrapper
      *
      * @param $name
      * @param $arguments
+     *
      * @return mixed
      */
     public function __call($name, $arguments)
@@ -85,9 +86,11 @@ class QueryWrapper
      * Retrieves a collection of Xero models if passed an array or collection of GUIDs.
      *
      * @param string|array|Collection $guid
-     * @return null|\XeroPHP\Remote\Collection|\XeroPHP\Remote\Model
+     *
      * @throws \XeroPHP\Exception
      * @throws \XeroPHP\Remote\Exception\NotFoundException
+     *
+     * @return null|\XeroPHP\Remote\Collection|\XeroPHP\Remote\Model
      */
     public function find($guid)
     {
