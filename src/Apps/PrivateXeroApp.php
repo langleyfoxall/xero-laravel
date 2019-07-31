@@ -1,4 +1,5 @@
 <?php
+
 namespace LangleyFoxall\XeroLaravel\Apps;
 
 use BadMethodCallException;
@@ -12,6 +13,7 @@ use XeroPHP\Application\PrivateApplication;
 
 /**
  * Class PrivateXeroApp
+ *
  * @package LangleyFoxall\XeroLaravel
  */
 class PrivateXeroApp extends PrivateApplication
@@ -48,6 +50,7 @@ class PrivateXeroApp extends PrivateApplication
     public function getAvailableRelationships()
     {
         $relationships = array_keys($this->relationshipToModelMap);
+
         sort($relationships);
 
         return collect($relationships);
@@ -63,9 +66,15 @@ class PrivateXeroApp extends PrivateApplication
      */
     public function populateRelationshipToModelMap($modelSubdirectory, $prefix)
     {
-        $directory = Utils::getProjectRootDirectory();
+        $vendor = Utils::getVendorDirectory();
 
-        $modelsDirectory = $directory.'/vendor/calcinai/xero-php/src/XeroPHP/Models/'.$modelSubdirectory;
+        $dependencyDirectory = Utils::normalizePath(
+            $vendor.'/calcinai/xero-php/src/'
+        );
+
+        $modelsDirectory = Utils::normalizePath(
+            $dependencyDirectory.'/XeroPHP/Models/'.$modelSubdirectory
+        );
 
         $di = new RecursiveDirectoryIterator($modelsDirectory);
         foreach (new RecursiveIteratorIterator($di) as $filename => $file) {
@@ -73,8 +82,19 @@ class PrivateXeroApp extends PrivateApplication
                 continue;
             }
 
-            $relationship = Str::camel($prefix.Str::plural(str_replace([$modelsDirectory, '.php', '/'], ['', '', ''], $filename)));
-            $model = str_replace([$directory.'/vendor/calcinai/xero-php/src/', '/', '.php'], ['', '\\', ''], $filename);
+            $relationship = Str::camel(
+                $prefix.Str::plural(
+                    str_replace(
+                        [$modelsDirectory, '.php', DIRECTORY_SEPARATOR], '',
+                        $filename
+                    )
+                )
+            );
+
+            $model = str_replace(
+                [$dependencyDirectory, DIRECTORY_SEPARATOR, '.php'], ['', '\\'],
+                $filename
+            );
 
             $this->relationshipToModelMap[$relationship] = $model;
         }

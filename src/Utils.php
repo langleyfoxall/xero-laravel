@@ -1,4 +1,5 @@
 <?php
+
 namespace LangleyFoxall\XeroLaravel;
 
 use Exception;
@@ -19,18 +20,38 @@ abstract class Utils
 
         do {
             $directory = dirname($directory);
-            $composer = $directory.'/composer.json';
-            $vendor = $directory.'/vendor/';
+            $composer = self::normalizePath($directory.'/composer.json');
+            $vendor = self::normalizePath($directory.'/vendor/');
 
-            if (file_exists($composer) && file_exists($vendor)) {
+            if (file_exists($composer) && is_dir($vendor)) {
                 $root = $directory;
             }
-        } while (is_null($root) && $directory != '/');
+        } while (is_null($root) && $directory != DIRECTORY_SEPARATOR);
 
         if (!is_null($root)) {
             return $root;
         }
 
         throw new Exception('Unable to determine project root directory.');
+    }
+
+    /**
+     * @return string
+     * @throws Exception
+     */
+    public static function getVendorDirectory()
+    {
+        return self::normalizePath(
+            self::getProjectRootDirectory().'/vendor'
+        );
+    }
+
+    /**
+     * @param string $path
+     * @return string
+     */
+    public static function normalizePath(string $path)
+    {
+        return str_replace('/', DIRECTORY_SEPARATOR, $path);
     }
 }
