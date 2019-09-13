@@ -11,7 +11,7 @@
         "accounting"
     ],
     "require": {
-        "illuminate/support": "^5.1",
+        "laravel/framework": "^5.1||^6.0",
         "calcinai/xero-php": "^1.8"
     },
     "autoload": {
