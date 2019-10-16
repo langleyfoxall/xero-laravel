@@ -4,7 +4,7 @@ namespace LangleyFoxall\XeroLaravel\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class Xero
+class Xero extends Facade
 {
     /**
      * Get the registered name of the component.
