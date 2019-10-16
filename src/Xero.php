@@ -1,6 +1,7 @@
 <?php
 namespace LangleyFoxall\XeroLaravel;
 
+use Exception;
 use LangleyFoxall\XeroLaravel\Apps\PrivateXeroApp;
 
 class Xero
@@ -12,7 +13,7 @@ class Xero
      *
      * @param string $key
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function app($key = 'default')
     {
@@ -28,14 +29,14 @@ class Xero
      *
      * @param string $key
      * @return PrivateXeroApp
-     * @throws \Exception
+     * @throws Exception
      */
     private function createApp($key)
     {
         $config = config(Constants::CONFIG_KEY);
 
         if (!isset($config['apps']) || !isset($config['apps'][$key])) {
-            throw new \Exception('The specified key could not be found in the Xero \'apps\' array, ' .
+            throw new Exception('The specified key could not be found in the Xero \'apps\' array, ' .
                 'or the \'apps\' array does not exist.');
         }
 
@@ -48,10 +49,10 @@ class Xero
 
             case 'public':
             case 'partner':
-                throw new \Exception('Public and partner Xero app types are not yet supported.');
+                throw new Exception('Public and partner Xero app types are not yet supported.');
                 break;
         }
 
-        throw new \Exception('Xero app type is invalid. Should be \'private\', \'public\', or \'partner\'.');
+        throw new Exception('Xero app type is invalid. Should be \'private\', \'public\', or \'partner\'.');
     }
 }
