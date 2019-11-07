@@ -27,6 +27,4 @@ class PrivateXeroApp extends PrivateApplication
 
         $this->populateRelationshipToModelMaps();
     }
-
-
 }
