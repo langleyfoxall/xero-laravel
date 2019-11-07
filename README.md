@@ -53,8 +53,9 @@ XERO_CONSUMER_KEY=XXXXXXIXHKXXXXXXST0TU44ZXXXXXX
 XERO_CONSUMER_SECRET=XXXXXXBNNUXXXXXXGWAJNFOUXXXXXX
 ```
 
-*Note: This library currently only supports private Xero apps, designed for 
-internal use by your organisation.*
+If you wish to use a public app, you will have to add a new app to the 
+configuration file or change the existing one. The `app_type` should be
+`public` rather than `private`. 
 
 ## Usage
 
