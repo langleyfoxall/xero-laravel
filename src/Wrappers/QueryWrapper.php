@@ -3,6 +3,8 @@ namespace LangleyFoxall\XeroLaravel\Wrappers;
 
 use Illuminate\Support\Collection;
 use LangleyFoxall\XeroLaravel\Apps\PrivateXeroApp;
+use LangleyFoxall\XeroLaravel\Traits\HasXeroRelationships;
+use XeroPHP\Application;
 use XeroPHP\Remote\Query;
 
 /**
@@ -29,9 +31,9 @@ class QueryWrapper
      * Builds a QueryWrapper around a Query object
      *
      * @param Query $query
-     * @param PrivateXeroApp $app
+     * @param Application $app
      */
-    public function __construct(Query $query, PrivateXeroApp $app)
+    public function __construct(Query $query, Application $app)
     {
         $this->query = $query;
         $this->app = $app;

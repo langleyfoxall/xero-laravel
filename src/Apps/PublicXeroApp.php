@@ -4,14 +4,14 @@ namespace LangleyFoxall\XeroLaravel\Apps;
 
 use Exception;
 use LangleyFoxall\XeroLaravel\Traits\HasXeroRelationships;
-use XeroPHP\Application\PrivateApplication;
+use XeroPHP\Application\PublicApplication;
 
 /**
- * Class PrivateXeroApp
+ * Class PublicXeroApp
  *
  * @package LangleyFoxall\XeroLaravel
  */
-class PrivateXeroApp extends PrivateApplication
+class PublicXeroApp extends PublicApplication
 {
     use HasXeroRelationships;
 
