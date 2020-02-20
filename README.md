@@ -52,6 +52,55 @@ XERO_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XERO_TENANT_ID=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
+### OAuth2 authentication flow
+
+If multiple users are going to be using your application, or if you need to dynamically fetch the access tokens you
+can use the built in authentication flow helper. This handles URI generation and redirects then allowing you to gain access
+to the token(s) without any unwanted mutations.
+
+A [`League\OAuth2\Client\Token\AccessTokenInterface`](https://github.com/thephpleague/oauth2-client/blob/master/src/Token/AccessTokenInterface.php) is returned.
+
+#### Usage
+
+Instantiate `OAuth2` in a controller, call `redirect` and then `getToken`.
+
+```php
+<?php
+use LangleyFoxall\XeroLaravel\OAuth2;
+
+(new OAuth2)->redirect()->getToken();
+```
+
+By default environment variables will be used:
+```
+XERO_CLIENT_ID=
+XERO_CLIENT_SECRET=
+XERO_REDIRECT_URI=
+```
+
+We pre-define the least amount of scopes for the authentication (`openid email profile`) but you can change these
+by adding `XERO_SCOPE` to your `.env` file. You can find a list of available scopes [here](https://developer.xero.com/documentation/oauth2/scopes).
+
+If you need to define the `client_id`, `client_secret`, `redirect_uri` or `scope` on the fly you can do so by
+calling the following methods before `redirect`:
+
+```
+<?php
+use LangleyFoxall\XeroLaravel\OAuth2;
+
+$oauth = new OAuth2;
+
+$oauth
+    ->setClientId('XXXX')
+    ->setClientSecret('XXXX')
+    ->setRedirectUri('XXXX')
+    ->setScope('XXXX');
+
+$oauth
+    ->redirect()
+    ->getToken();
+```
+
 ## Migration from 1.x/OAuth 1a
 
 There is now only one flow for all applications, which is most similar to the legacy Public application. 
