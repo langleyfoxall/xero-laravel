@@ -13,18 +13,9 @@ return [
     */
 
     'apps' => [
-
         'default' => [
-
-            'app_type' => 'private',
-            'oauth' => [
-                'callback'         => 'http://localhost/',
-                'consumer_key'     => env('XERO_CONSUMER_KEY'),
-                'consumer_secret'  => env('XERO_CONSUMER_SECRET'),
-                'rsa_private_key'  => 'file://'.storage_path('app/xero-key-pair/privatekey.pem'),
-            ],
-
-        ]
-    ]
-
+            'token' => env('XERO_TOKEN'),
+            'tenant_id' => env('XERO_TENANT_ID'),
+        ],
+    ],
 ];

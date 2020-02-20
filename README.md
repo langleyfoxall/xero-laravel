@@ -43,19 +43,25 @@ credentials for your Xero app(s). You can create apps and find the
 required credentials in the [My Apps](https://developer.xero.com/myapps/) 
 section of your Xero account.
 
-If you only intend to use one private Xero app, the standard configuration 
+If you only intend to use one Xero app, the standard configuration 
 file should be sufficient. All you will need to do is add the following 
-variables to your `.env` file and place the `privatekey.pem` file in 
-`storage/app/xero-key-pair/`.
+variables to your `.env` file.
 
 ```
-XERO_CONSUMER_KEY=XXXXXXIXHKXXXXXXST0TU44ZXXXXXX
-XERO_CONSUMER_SECRET=XXXXXXBNNUXXXXXXGWAJNFOUXXXXXX
+XERO_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XERO_TENANT_ID=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-If you wish to use a public app, you will have to add a new app to the 
-configuration file or change the existing one. The `app_type` should be
-`public` rather than `private`. 
+## Migration from 1.x/OAuth 1a
+
+There is now only one flow for all applications, which is most similar to the legacy Public application. 
+All applications now require the OAuth 2 authorisation flow and specific organisations to be authorised 
+at runtime, rather than creating certificates during app creation.
+
+Following [this example](https://github.com/calcinai/xero-php#authorization-code-flow) you can generate the 
+required token and tenant id.   
+
+For more information on scopes try the [xero documentation](https://developer.xero.com/documentation/oauth2/scopes).  
 
 ## Usage
 

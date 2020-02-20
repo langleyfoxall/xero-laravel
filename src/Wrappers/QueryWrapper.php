@@ -2,8 +2,6 @@
 namespace LangleyFoxall\XeroLaravel\Wrappers;
 
 use Illuminate\Support\Collection;
-use LangleyFoxall\XeroLaravel\Apps\PrivateXeroApp;
-use LangleyFoxall\XeroLaravel\Traits\HasXeroRelationships;
 use XeroPHP\Application;
 use XeroPHP\Remote\Query;
 

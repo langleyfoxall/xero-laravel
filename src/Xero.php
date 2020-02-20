@@ -2,9 +2,6 @@
 namespace LangleyFoxall\XeroLaravel;
 
 use Exception;
-use LangleyFoxall\XeroLaravel\Apps\PrivateXeroApp;
-use LangleyFoxall\XeroLaravel\Apps\PublicXeroApp;
-use XeroPHP\Application;
 
 class Xero
 {
@@ -19,7 +16,7 @@ class Xero
      */
     public function app($key = 'default')
     {
-        if (!isset($this->apps[$key])) {
+        if (! isset($this->apps[$key])) {
             $this->apps[$key] = $this->createApp($key);
         }
 
@@ -30,34 +27,18 @@ class Xero
      * Creates the XeroApp object
      *
      * @param string $key
-     * @return Application
+     * @return XeroApp
      * @throws Exception
      */
     private function createApp($key)
     {
         $config = config(Constants::CONFIG_KEY);
 
-        if (!isset($config['apps']) || !isset($config['apps'][$key])) {
+        if (! isset($config['apps'][$key])) {
             throw new Exception('The specified key could not be found in the Xero \'apps\' array, ' .
                 'or the \'apps\' array does not exist.');
         }
 
-        $appConfig = $config['apps'][$key];
-
-        switch ($appConfig['app_type']) {
-            case 'private':
-                return new PrivateXeroApp($appConfig);
-                break;
-
-            case 'public':
-                return new PublicXeroApp($appConfig);
-                break;
-
-            case 'partner':
-                throw new Exception('Partner Xero app types are not yet supported.');
-                break;
-        }
-
-        throw new Exception('Xero app type is invalid. Should be \'private\', \'public\', or \'partner\'.');
+        return new XeroApp($config['apps'][$key]['token'], $config['apps'][$key]['tenant_id']);
     }
 }
