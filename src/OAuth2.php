@@ -3,13 +3,29 @@
 namespace LangleyFoxall\XeroLaravel;
 
 use Calcinai\OAuth2\Client\Provider\Xero as Provider;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 use LangleyFoxall\XeroLaravel\Exceptions\InvalidConfigException;
 use LangleyFoxall\XeroLaravel\Exceptions\InvalidOAuth2StateException;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
+use League\OAuth2\Client\Token\AccessTokenInterface;
+use function compact;
 use function config;
+use function redirect;
+use function session;
 
 class OAuth2
 {
+    const KEYS = [
+        'SESSION_STATE' => 'oauth2state',
+        'REQUEST_STATE' => 'state',
+        'REQUEST_CODE'  => 'code',
+    ];
+
+    /** @var Request $request */
+    protected $request;
+
     /** @var string $key */
     protected $key;
 
@@ -25,14 +41,19 @@ class OAuth2
     /** @var string $scope */
     protected $scope;
 
-    /** @var string $token */
+    /** @var Provider $provider */
+    protected $provider;
+
+    /** @var AccessTokenInterface $token */
     protected $token;
 
     /**
-     * @param string $key
+     * @param Request $request
+     * @param string  $key
      */
-    public function __construct(string $key = 'default')
+    public function __construct(Request $request, string $key = 'default')
     {
+        $this->request = $request;
         $this->key = $key;
 
         $this->bootstrap();
@@ -45,6 +66,8 @@ class OAuth2
      */
     protected function bootstrap()
     {
+        $this->startSession();
+
         $key = $this->key;
         $config = config(Constants::CONFIG_KEY);
 
@@ -59,11 +82,75 @@ class OAuth2
     }
 
     /**
-     * @return string
+     * Get the OAuth2 provider.
+     *
+     * @param bool $new
+     * @return Provider
+     * @throws InvalidConfigException
      */
-    public function getToken()
+    public function getProvider($new = false)
     {
-        return $this->token;
+        if (! empty($provider = $this->provider) && ! $new) {
+            return $provider;
+        }
+
+        $this->validateConfig();
+
+        return $this->provider = new Provider([
+            'clientId'     => $this->clientId,
+            'clientSecret' => $this->clientSecret,
+            'redirectUri'  => $this->redirectUri,
+        ]);
+    }
+
+    /**
+     * Get the authentication URL.
+     *
+     * @return string
+     * @throws InvalidConfigException
+     */
+    public function getAuthUri()
+    {
+        $provider = $this->getProvider();
+        $scope = $this->scope;
+
+        return $provider->getAuthorizationUrl(compact(
+            'scope'
+        ));
+    }
+
+    /**
+     * Get the token.
+     *
+     * @param bool $new
+     * @return AccessTokenInterface
+     * @throws IdentityProviderException
+     * @throws InvalidConfigException
+     * @throws InvalidOAuth2StateException
+     */
+    public function getToken($new = false)
+    {
+        if (! empty($token = $this->token) && ! $new) {
+            return $token;
+        }
+
+        $provider = $this->getProvider();
+        $request = $this->request;
+
+        $sessionState = session()->get(self::KEYS['SESSION_STATE']);
+        $requestState = $request->get(self::KEYS['REQUEST_STATE']);
+        $code = $request->get(self::KEYS['REQUEST_CODE']);
+
+        // Check that state hasn't been tampered with
+        if ((empty($requestState) || ($requestState !== $sessionState))) {
+            unset($sessionState);
+
+            throw new InvalidOAuth2StateException;
+        }
+
+        return $this->token = $provider->getAccessToken('authorization_code', compact(
+            'code'
+        ));
     }
 
     /**
@@ -106,6 +193,8 @@ class OAuth2
     }
 
     /**
+     * Manually set the scope.
+     *
      * @param string $scope
      * @return $this
      */
@@ -119,52 +208,37 @@ class OAuth2
     /**
      * Handle the redirect flow for OAuth2.
      *
-     * @return $this
+     * @return bool|RedirectResponse|Redirector
      * @throws InvalidConfigException
-     * @throws InvalidOAuth2StateException
-     * @throws IdentityProviderException
      */
     public function redirect()
     {
-        $this->validateConfig();
+        $request = $this->request;
 
-        $provider = new Provider([
-            'clientId'     => $this->clientId,
-            'clientSecret' => $this->clientSecret,
-            'redirectUri'  => $this->redirectUri,
-        ]);
-
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
+        if (! empty($request->get(self::KEYS['REQUEST_CODE']))) {
+            return false;
         }
 
-        // Attempt to get token
-        if (! isset($_GET['code'])) {
-            $scope = $this->scope;
+        $authUri = $this->getAuthUri();
 
-            $authUri = $provider->getAuthorizationUrl(compact(
-                'scope'
-            ));
+        session()->put(
+            self::KEYS['SESSION_STATE'],
+            $this->getProvider()->getState()
+        );
 
-            $_SESSION['oauth2state'] = $provider->getState();
+        return redirect($authUri);
+    }
 
-            header('Location: '.$authUri);
-            exit;
+    /**
+     * Start a session if one has not already been started.
+     *
+     * @return void
+     */
+    protected function startSession()
+    {
+        if (! session()->isStarted()) {
+            session()->start();
         }
-
-        // Check that state hasn't been tampered with
-        if ((empty($_GET['state']) || ($_GET['state'] !== $_SESSION['oauth2state']))) {
-            unset($_SESSION['oauth2state']);
-
-            throw new InvalidOAuth2StateException;
-        }
-
-        // Try to get token from grant
-        $this->token = $provider->getAccessToken('authorization_code', [
-            'code' => $_GET['code'],
-        ]);
-
-        return $this;
     }
 
     /**
