@@ -111,7 +111,7 @@ class OAuth2
     }
 
     /**
-     * Get all the tenants (Xero organisations) that the access token is able to access.
+     * Get all the tenants (typically Xero organisations) that the access token is able to access.
      *
      * @param AccessTokenInterface $accessToken
      * @return XeroTenant[]
