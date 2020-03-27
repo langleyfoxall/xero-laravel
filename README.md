@@ -52,6 +52,108 @@ XERO_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XERO_TENANT_ID=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
+### OAuth2 authentication flow
+
+If multiple users are going to be using your application, or if you need to dynamically fetch the access tokens you
+can use the built in authentication flow helper. This handles URI generation and redirects then allowing you to gain access
+to the token(s) without any unwanted mutations.
+
+* A [`Illuminate\Http\RedirectResponse`](https://laravel.com/api/6.x/Illuminate/Http/RedirectResponse.html) is returned from `redirect`.
+* A [`League\OAuth2\Client\Token\AccessTokenInterface`](https://github.com/thephpleague/oauth2-client/blob/master/src/Token/AccessTokenInterface.php) is returned from `getToken`.
+
+#### Usage
+
+Instantiate `OAuth2` in a controller and pass in a Request, call `redirect` and then `getToken`.
+
+```php
+<?php
+use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use LangleyFoxall\XeroLaravel\OAuth2;
+use LangleyFoxall\XeroLaravel\Exceptions\InvalidConfigException;
+use LangleyFoxall\XeroLaravel\Exceptions\InvalidOAuth2StateException;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
+
+class OAuthController extends Controller
+{
+    /**
+     * @param Request $request
+     * @return RedirectResponse|void
+     * @throws InvalidConfigException
+     * @throws InvalidOAuth2StateException
+     * @throws IdentityProviderException
+     */
+    public function __invoke(Request $request)
+    {
+        $oauth = new OAuth2($request);
+
+        if (!$response = $oauth->redirect()) {
+            $token = $oauth->getToken();
+
+            // Deal with token
+            dd($token);
+        }
+
+        return $response;
+    }
+}
+```
+
+By default environment variables will be used:
+```
+XERO_CLIENT_ID=
+XERO_CLIENT_SECRET=
+XERO_REDIRECT_URI=
+```
+
+We pre-define the least amount of scopes for the authentication (`openid email profile`) but you can change these
+by adding `XERO_SCOPE` to your `.env` file. You can find a list of available scopes [here](https://developer.xero.com/documentation/oauth2/scopes).
+
+If you need to define the `client_id`, `client_secret`, `redirect_uri` or `scope` on the fly you can do so by
+calling the following methods before `redirect`:
+
+```php
+<?php
+use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use LangleyFoxall\XeroLaravel\OAuth2;
+use LangleyFoxall\XeroLaravel\Exceptions\InvalidConfigException;
+use LangleyFoxall\XeroLaravel\Exceptions\InvalidOAuth2StateException;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
+
+class OAuthController extends Controller
+{
+    /**
+     * @param Request $request
+     * @return RedirectResponse|void
+     * @throws InvalidConfigException
+     * @throws InvalidOAuth2StateException
+     * @throws IdentityProviderException
+     */
+    public function __invoke(Request $request)
+    {
+        $oauth = new OAuth2($request);
+
+        $oauth
+            ->setClientId('XXXX')
+            ->setClientSecret('XXXX')
+            ->setRedirectUri('XXXX')
+            ->setScope('XXXX');
+
+        if (!$response = $oauth->redirect()) {
+            $token = $oauth->getToken();
+
+            // Deal with token
+            dd($token);
+        }
+
+        return $response;
+    }
+}
+```
+
 ## Migration from 1.x/OAuth 1a
 
 There is now only one flow for all applications, which is most similar to the legacy Public application. 
