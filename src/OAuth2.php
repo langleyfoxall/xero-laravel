@@ -31,11 +31,6 @@ class OAuth2
     /** @var string $scope */
     protected $scope;
 
-    /** @var Provider $provider */
-    protected $provider;
-
-    /** @var AccessTokenInterface $token */
-    protected $token;
 
     /**
      * @param string $key
@@ -63,15 +58,11 @@ class OAuth2
      */
     private function getProvider()
     {
-        if (!$this->provider) {
-            $this->provider = new Provider([
-                'clientId'     => $this->clientId,
-                'clientSecret' => $this->clientSecret,
-                'redirectUri'  => $this->redirectUri,
-            ]);
-        }
-
-        return $this->provider;
+        return new Provider([
+            'clientId'     => $this->clientId,
+            'clientSecret' => $this->clientSecret,
+            'redirectUri'  => $this->redirectUri,
+        ]);
     }
 
     /**
