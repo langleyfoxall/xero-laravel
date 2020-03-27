@@ -21,12 +21,12 @@ class XeroApp extends Application
      * XeroApp constructor.
      *
      * @param AccessTokenInterface $accessToken
-     * @param XeroTenant $tenant
+     * @param string $tenantId
      * @throws Exception
      */
-    public function __construct(AccessTokenInterface $accessToken, XeroTenant $tenant)
+    public function __construct(AccessTokenInterface $accessToken, string $tenantId)
     {
-        parent::__construct($accessToken->getToken(), $tenant->id);
+        parent::__construct($accessToken->getToken(), $tenantId);
 
         $this->populateRelationshipToModelMaps();
     }
