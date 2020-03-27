@@ -3,31 +3,21 @@
 namespace LangleyFoxall\XeroLaravel;
 
 use Calcinai\OAuth2\Client\Provider\Xero as Provider;
+use Calcinai\OAuth2\Client\XeroTenant;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
-use LangleyFoxall\XeroLaravel\Exceptions\InvalidConfigException;
+use InvalidArgumentException;
 use LangleyFoxall\XeroLaravel\Exceptions\InvalidOAuth2StateException;
+use LangleyFoxall\XeroLaravel\Exceptions\InvalidXeroRequestException;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessTokenInterface;
-use function compact;
-use function config;
-use function redirect;
-use function session;
 
 class OAuth2
 {
     const KEYS = [
-        'SESSION_STATE' => 'oauth2state',
-        'REQUEST_STATE' => 'state',
-        'REQUEST_CODE'  => 'code',
+        'SESSION_STATE' => 'xero-oauth-2-session-state',
     ];
-
-    /** @var Request $request */
-    protected $request;
-
-    /** @var string $key */
-    protected $key;
 
     /** @var string $clientId */
     protected $clientId;
@@ -48,171 +38,111 @@ class OAuth2
     protected $token;
 
     /**
-     * @param Request $request
-     * @param string  $key
+     * @param string $key
      */
-    public function __construct(Request $request, string $key = 'default')
+    public function __construct(string $key = 'default')
     {
-        $this->request = $request;
-        $this->key = $key;
-
-        $this->bootstrap();
-    }
-
-    /**
-     * Bootstrap the OAuth2 flow by using config values.
-     *
-     * @return void
-     */
-    protected function bootstrap()
-    {
-        $this->startSession();
-
-        $key = $this->key;
         $config = config(Constants::CONFIG_KEY);
 
-        if (isset($config['apps'][$key])) {
-            $app = $config['apps'][$key];
-
-            $this->setClientId($app['client_id'] ?? '');
-            $this->setClientSecret($app['client_secret'] ?? '');
-            $this->setRedirectUri($app['redirect_uri'] ?? '');
-            $this->setScope($app['scope'] ?? '');
+        if (!isset($config['apps'][$key])) {
+            throw new InvalidArgumentException('Invalid app key specified. Please check your `xero-laravel-lf` configuration file.');
         }
+
+        $app = $config['apps'][$key];
+
+        $this->clientId = $app['client_id'];
+        $this->clientSecret = $app['client_secret'];
+        $this->redirectUri = $app['redirect_uri'];
+        $this->scope = $app['scope'];
     }
 
     /**
      * Get the OAuth2 provider.
      *
-     * @param bool $new
      * @return Provider
-     * @throws InvalidConfigException
      */
-    public function getProvider($new = false)
+    private function getProvider()
     {
-        if (! empty($provider = $this->provider) && ! $new) {
-            return $provider;
+        if (!$this->provider) {
+            $this->provider = new Provider([
+                'clientId'     => $this->clientId,
+                'clientSecret' => $this->clientSecret,
+                'redirectUri'  => $this->redirectUri,
+            ]);
         }
 
-        $this->validateConfig();
-
-        return $this->provider = new Provider([
-            'clientId'     => $this->clientId,
-            'clientSecret' => $this->clientSecret,
-            'redirectUri'  => $this->redirectUri,
-        ]);
+        return $this->provider;
     }
 
     /**
-     * Get the authentication URL.
+     * Get a redirect to the Xero authorization URL.
      *
-     * @return string
-     * @throws InvalidConfigException
+     * @return RedirectResponse|Redirector
      */
-    public function getAuthUri()
+    public function getAuthorizationRedirect()
     {
         $provider = $this->getProvider();
-        $scope = $this->scope;
 
-        return $provider->getAuthorizationUrl(compact(
-            'scope'
-        ));
-    }
+        $authUri = $provider->getAuthorizationUrl(['scope' => $this->scope]);
 
-    /**
-     * Get the token.
-     *
-     * @param bool $new
-     * @return AccessTokenInterface
-     * @throws IdentityProviderException
-     * @throws InvalidConfigException
-     * @throws InvalidOAuth2StateException
-     */
-    public function getToken($new = false)
-    {
-        if (! empty($token = $this->token) && ! $new) {
-            return $token;
-        }
-
-        $provider = $this->getProvider();
-        $request = $this->request;
-
-        $sessionState = session()->get(self::KEYS['SESSION_STATE']);
-        $requestState = $request->get(self::KEYS['REQUEST_STATE']);
-        $code = $request->get(self::KEYS['REQUEST_CODE']);
-
-        // Check that state hasn't been tampered with
-        if ((empty($requestState) || ($requestState !== $sessionState))) {
-            unset($sessionState);
-
-            throw new InvalidOAuth2StateException;
-        }
-
-        return $this->token = $provider->getAccessToken('authorization_code', compact(
-            'code'
-        ));
-    }
-
-    /**
-     * Handle the redirect flow for OAuth2.
-     *
-     * @return bool|RedirectResponse|Redirector
-     * @throws InvalidConfigException
-     */
-    public function redirect()
-    {
-        $request = $this->request;
-
-        if (! empty($request->get(self::KEYS['REQUEST_CODE']))) {
-            return false;
-        }
-
-        $authUri = $this->getAuthUri();
-
-        session()->put(
-            self::KEYS['SESSION_STATE'],
-            $this->getProvider()->getState()
-        );
+        session()->put(self::KEYS['SESSION_STATE'], $provider->getState());
 
         return redirect($authUri);
     }
 
     /**
-     * Start a session if one has not already been started.
+     * Handle the incoming request from Xero, request an access token and return it.
      *
-     * @return void
+     * @param Request $request
+     * @return AccessTokenInterface
+     * @throws IdentityProviderException
+     * @throws InvalidOAuth2StateException
+     * @throws InvalidXeroRequestException
      */
-    protected function startSession()
+    public function getAccessTokenFromXeroRequest(Request $request)
     {
-        if (! session()->isStarted()) {
-            session()->start();
+        $code = $request->get('code');
+        $state = $request->get('state');
+
+        if (!$code) {
+            throw new InvalidXeroRequestException('No `code` present is request from Xero.');
         }
+
+        if (!$state) {
+            throw new InvalidXeroRequestException('No `code` present is request from Xero.');
+        }
+
+        if ($state !== session(self::KEYS['SESSION_STATE'])) {
+            throw new InvalidOAuth2StateException('Invalid `state`. Request may have been tampered with.');
+        }
+
+        return $this->getProvider()->getAccessToken('authorization_code', ['code' => $code]);
     }
 
     /**
-     * Validate OAuth2 configuration settings.
+     * Get all the tenants (Xero organisations) that the access token is able to access.
      *
-     * @return void
-     * @throws InvalidConfigException
+     * @param AccessTokenInterface $accessToken
+     * @return XeroTenant[]
+     * @throws IdentityProviderException
      */
-    protected function validateConfig()
+    public function getTenants(AccessTokenInterface $accessToken)
     {
-        $key = $this->key;
-
-        if (empty($this->clientId)) {
-            throw new InvalidConfigException('A client ID is required for the OAuth2 flow. Set `client_id` in '.$key.' app\'s configuration or call `setClientId` before `redirect`.');
-        }
-
-        if (empty($this->clientSecret)) {
-            throw new InvalidConfigException('A client secret is required for the OAuth2 flow. Set `client_secret` in '.$key.' app\'s configuration or call `setClientSecret` before `redirect`.');
-        }
-
-        if (empty($this->redirectUri)) {
-            throw new InvalidConfigException('A redirect URI is required for the OAuth2 flow. Set `redirect_uri` in '.$key.' app\'s configuration or call `setRedirectUri` before `redirect`.');
-        }
-
-        if (empty($this->scope)) {
-            throw new InvalidConfigException('A scope is required for the OAuth2 flow. Set `scope` in '.$key.' app\'s configuration or call `setScope` before `redirect`.');
-        }
+        return $this->provider->getTenants($accessToken);
     }
+
+    /**
+     * Refreshes an access token, and returns the new access token.
+     *
+     * @param AccessTokenInterface $accessToken
+     * @return AccessTokenInterface
+     * @throws IdentityProviderException
+     */
+    public function refreshAccessToken(AccessTokenInterface $accessToken)
+    {
+        return $this->getProvider()->getAccessToken('refresh_token', [
+            'refresh_token' => $accessToken->getRefreshToken()
+        ]);
+    }
+
 }

@@ -2,7 +2,7 @@
 
 namespace LangleyFoxall\XeroLaravel\Exceptions;
 
-class InvalidConfigException extends \Exception
+class InvalidXeroRequestException extends \Exception
 {
     //
 }
