@@ -135,5 +135,4 @@ class OAuth2
             'refresh_token' => $accessToken->getRefreshToken()
         ]);
     }
-
 }

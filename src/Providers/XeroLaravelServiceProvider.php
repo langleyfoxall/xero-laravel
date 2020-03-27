@@ -29,5 +29,4 @@ class XeroLaravelServiceProvider extends ServiceProvider
             Constants::CONFIG_PATH => config_path(Constants::CONFIG_KEY.'.php'),
         ]);
     }
-
 }
