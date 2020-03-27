@@ -175,18 +175,6 @@ $xero = (new Xero())->app();            # To use the 'default' app in the config
 $xero = (new Xero())->app('foobar');    # To use a custom app called 'foobar' in the config file
 ```
 
-Alternately you can use the Xero facade  
-*Note this is only for the default config*
-```php
-use LangleyFoxall\XeroLaravel\Facades\Xero;
-
-# Retrieve all contacts via facade
-$contacts = Xero::contacts()->get();
-
-# Retrieve an individual contact by its GUID
-$contact =  Xero::contacts()->find('34xxxx6e-7xx5-2xx4-bxx5-6123xxxxea49');
-```
-
 You can then immediately access Xero data using Eloquent-like syntax. The 
 following code snippet shows the available syntax. When multiple results 
 are returned from the API they will be returned as Laravel Collection.
