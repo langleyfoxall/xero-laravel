@@ -119,7 +119,7 @@ class OAuth2
      */
     public function getTenants(AccessTokenInterface $accessToken)
     {
-        return $this->provider->getTenants($accessToken);
+        return $this->getProvider()->getTenants($accessToken);
     }
 
     /**
