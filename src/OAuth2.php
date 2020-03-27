@@ -31,8 +31,9 @@ class OAuth2
     /** @var string $scope */
     protected $scope;
 
-
     /**
+     * OAuth2 constructor.
+     * 
      * @param string $key
      */
     public function __construct(string $key = 'default')
