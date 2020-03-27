@@ -96,11 +96,11 @@ class OAuth2
         $state = $request->get('state');
 
         if (!$code) {
-            throw new InvalidXeroRequestException('No `code` present is request from Xero.');
+            throw new InvalidXeroRequestException('No `code` present in request from Xero.');
         }
 
         if (!$state) {
-            throw new InvalidXeroRequestException('No `state` present is request from Xero.');
+            throw new InvalidXeroRequestException('No `state` present in request from Xero.');
         }
 
         if ($state !== session(self::KEYS['SESSION_STATE'])) {
