@@ -100,7 +100,7 @@ class OAuth2
         }
 
         if (!$state) {
-            throw new InvalidXeroRequestException('No `code` present is request from Xero.');
+            throw new InvalidXeroRequestException('No `state` present is request from Xero.');
         }
 
         if ($state !== session(self::KEYS['SESSION_STATE'])) {
