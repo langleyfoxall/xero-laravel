@@ -154,58 +154,6 @@ class OAuth2
     }
 
     /**
-     * Manually set the client ID.
-     *
-     * @param string $clientId
-     * @return $this
-     */
-    public function setClientId(string $clientId)
-    {
-        $this->clientId = $clientId;
-
-        return $this;
-    }
-
-    /**
-     * Manually set the client secret.
-     *
-     * @param string $clientSecret
-     * @return $this
-     */
-    public function setClientSecret(string $clientSecret)
-    {
-        $this->clientSecret = $clientSecret;
-
-        return $this;
-    }
-
-    /**
-     * Manually set the redirect URI.
-     *
-     * @param string $redirectUri
-     * @return $this
-     */
-    public function setRedirectUri(string $redirectUri)
-    {
-        $this->redirectUri = $redirectUri;
-
-        return $this;
-    }
-
-    /**
-     * Manually set the scope.
-     *
-     * @param string $scope
-     * @return $this
-     */
-    public function setScope(string $scope)
-    {
-        $this->scope = trim($scope);
-
-        return $this;
-    }
-
-    /**
      * Handle the redirect flow for OAuth2.
      *
      * @return bool|RedirectResponse|Redirector
