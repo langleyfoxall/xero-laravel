@@ -2,8 +2,10 @@
 
 namespace LangleyFoxall\XeroLaravel;
 
+use Calcinai\OAuth2\Client\XeroTenant;
 use Exception;
 use LangleyFoxall\XeroLaravel\Traits\HasXeroRelationships;
+use League\OAuth2\Client\Token\AccessTokenInterface;
 use XeroPHP\Application;
 
 /**
@@ -18,13 +20,13 @@ class XeroApp extends Application
     /**
      * XeroApp constructor.
      *
-     * @param $token
-     * @param $tenantId
+     * @param AccessTokenInterface $accessToken
+     * @param string $tenantId
      * @throws Exception
      */
-    public function __construct($token, $tenantId)
+    public function __construct(AccessTokenInterface $accessToken, string $tenantId)
     {
-        parent::__construct($token, $tenantId);
+        parent::__construct($accessToken->getToken(), $tenantId);
 
         $this->populateRelationshipToModelMaps();
     }
