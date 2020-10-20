@@ -136,4 +136,15 @@ class OAuth2
             'refresh_token' => $accessToken->getRefreshToken()
         ]);
     }
+    
+    /**
+     * Remove an individual tenant connection
+     *
+     * @param AccessTokenInterface $accessToken
+     * @param $connectionId
+     */
+    public function disconnect(AccessTokenInterface $accessToken, $connectionId)
+    {
+        $this->getProvider()->disconnect($accessToken, $connectionId);
+    }
 }
