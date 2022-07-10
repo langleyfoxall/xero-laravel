@@ -127,14 +127,20 @@ class OAuth2
      * Refreshes an access token, and returns the new access token.
      *
      * @param AccessTokenInterface $accessToken
+     * @param string|null $grantType
      * @return AccessTokenInterface
-     * @throws IdentityProviderException
      */
-    public function refreshAccessToken(AccessTokenInterface $accessToken)
+    public function refreshAccessToken(AccessTokenInterface $accessToken, string? $grantType = null)
     {
-        return $this->getProvider()->getAccessToken('refresh_token', [
+        $body = [
             'refresh_token' => $accessToken->getRefreshToken()
-        ]);
+        ];
+
+        if (isset($grantType) && (trim($grantType) !== "")) {
+            $body['grant_type'] = $grantType;
+        }
+
+        return $this->getProvider()->getAccessToken('refresh_token', $body);
     }
     
     /**
