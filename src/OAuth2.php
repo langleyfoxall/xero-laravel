@@ -130,7 +130,7 @@ class OAuth2
      * @param string|null $grantType
      * @return AccessTokenInterface
      */
-    public function refreshAccessToken(AccessTokenInterface $accessToken, string? $grantType = null)
+    public function refreshAccessToken(AccessTokenInterface $accessToken, $grantType = null)
     {
         $body = [
             'refresh_token' => $accessToken->getRefreshToken()
@@ -141,5 +141,16 @@ class OAuth2
         }
 
         return $this->getProvider()->getAccessToken('refresh_token', $body);
+    }
+    
+    /**
+     * Remove an individual tenant connection
+     *
+     * @param AccessTokenInterface $accessToken
+     * @param $connectionId
+     */
+    public function disconnect(AccessTokenInterface $accessToken, $connectionId)
+    {
+        $this->getProvider()->disconnect($accessToken, $connectionId);
     }
 }
