@@ -130,7 +130,7 @@ class OAuth2
      * @param string|null $grantType
      * @return AccessTokenInterface
      */
-    public function refreshAccessToken(AccessTokenInterface $accessToken, string? $grantType = null)
+    public function refreshAccessToken(AccessTokenInterface $accessToken, ?string $grantType = null)
     {
         $body = [
             'refresh_token' => $accessToken->getRefreshToken()
