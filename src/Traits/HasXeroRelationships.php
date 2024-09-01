@@ -2,14 +2,10 @@
 
 namespace LangleyFoxall\XeroLaravel\Traits;
 
-use BadMethodCallException;
-use Exception;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use LangleyFoxall\XeroLaravel\Utils;
 use LangleyFoxall\XeroLaravel\Wrappers\QueryWrapper;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 
 trait HasXeroRelationships
 {
@@ -37,7 +33,7 @@ trait HasXeroRelationships
     /**
      * Populates all relationship to model maps.
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function populateRelationshipToModelMaps()
     {
@@ -54,22 +50,22 @@ trait HasXeroRelationships
      *
      * @param $modelSubdirectory
      * @param $prefix
-     * @throws Exception
+     * @throws \Exception
      */
     public function populateRelationshipToModelMap($modelSubdirectory, $prefix)
     {
-        $vendor = Utils::getVendorDirectory();
+        $vendor = $this->getVendorDirectory();
 
-        $dependencyDirectory = Utils::normalizePath(
-            $vendor.'/calcinai/xero-php/src/'
+        $dependencyDirectory = $this->normalizePath(
+            $vendor.'/calcinai/xero-php/src'
         );
 
-        $modelsDirectory = Utils::normalizePath(
+        $modelsDirectory = $this->normalizePath(
             $dependencyDirectory.'/XeroPHP/Models/'.$modelSubdirectory
         );
 
-        $di = new RecursiveDirectoryIterator($modelsDirectory);
-        foreach (new RecursiveIteratorIterator($di) as $filename => $file) {
+        $di = new \RecursiveDirectoryIterator($modelsDirectory);
+        foreach (new \RecursiveIteratorIterator($di) as $filename => $file) {
             if ($file->isDir() || !Str::endsWith($filename, '.php')) {
                 continue;
             }
@@ -93,6 +89,44 @@ trait HasXeroRelationships
     }
 
     /**
+     * Finds and returns the project's root directory
+     * (containing the composer.json file).
+     *
+     * @return null|string
+     * @throws \Exception
+     */
+    private function getProjectRootDirectory()
+    {
+        $root = str(File::dirname(__FILE__))->before('vendor');
+
+        if (File::exists($root . 'composer.json') && File::isDirectory($root . 'vendor')) {
+            return $root;
+        }
+
+        throw new \Exception('Unable to determine project root directory.');
+    }
+
+    /**
+     * @return string
+     * @throws \Exception
+     */
+    private function getVendorDirectory()
+    {
+        return $this->normalizePath(
+            $this->getProjectRootDirectory() . 'vendor'
+        );
+    }
+
+    /**
+     * @param string $path
+     * @return string
+     */
+    private function normalizePath(string $path)
+    {
+        return str_replace('/', DIRECTORY_SEPARATOR, $path);
+    }
+
+    /**
      * Call a relationship method, and return a QueryWrapper.
      * Syntax: $xero->contacts()
      *
@@ -105,7 +139,7 @@ trait HasXeroRelationships
         $relationships = array_keys($this->relationshipToModelMap);
 
         if (!in_array($name, $relationships)) {
-            throw new BadMethodCallException();
+            throw new \BadMethodCallException();
         }
 
         $model = $this->relationshipToModelMap[$name];

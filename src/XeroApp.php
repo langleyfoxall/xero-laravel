@@ -2,8 +2,6 @@
 
 namespace LangleyFoxall\XeroLaravel;
 
-use Calcinai\OAuth2\Client\XeroTenant;
-use Exception;
 use LangleyFoxall\XeroLaravel\Traits\HasXeroRelationships;
 use League\OAuth2\Client\Token\AccessTokenInterface;
 use XeroPHP\Application;
@@ -22,7 +20,7 @@ class XeroApp extends Application
      *
      * @param AccessTokenInterface $accessToken
      * @param string $tenantId
-     * @throws Exception
+     * @throws \Exception
      */
     public function __construct(AccessTokenInterface $accessToken, string $tenantId)
     {
