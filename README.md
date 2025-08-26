@@ -104,7 +104,7 @@ class XeroController extends Controller
         // You can store these anyway you wish. For this example, we're storing them in the database using Eloquent.
         $user = auth()->user();
         $user->xero_access_token = json_encode($accessToken);
-        $user->tenant_id = $selectedTenant->tenantId;
+        $user->xero_tenant_id = $selectedTenant->tenantId;
         $user->save();
     }
 
@@ -144,7 +144,7 @@ use League\OAuth2\Client\Token\AccessToken;
 $user = auth()->user(); 
 
 $xero = new XeroApp(
-            new AccessToken(json_decode($user->xero_oauth_2_access_token)),
+            new AccessToken(json_decode($user->xero_access_token)),
             $user->xero_tenant_id
         );
 ```
